@@ -26,7 +26,7 @@ def signup():
     username = username_entry.get()
     password = password_entry.get()
     if username !="" and password !="":
-        cursor.execute("Select username FROM users WHERE username=?",[username])
+        cursor.execute("SELECT username FROM users WHERE username=?",[username])
         if cursor.fetchone() is not None:
             messagebox.showerror("Error","Username already exists")
         else:
@@ -38,6 +38,23 @@ def signup():
             messagebox.showinfo("Success","Your account has been created")
     else:
         messagebox.showerror("Error","Please enter all data")
+
+def login_account():
+    username = username_entry2.get()
+    password = password_entry2.get()
+    if username!="" and password!="":
+        cursor.execute("Select password FROM users WHERE username=?",[username])
+        result = cursor.fetchone()
+        if result:
+            if bcrypt.checkpw(password.encode("utf-8"),result[0]):
+                messagebox.showinfo("Success","You have logged in successfully")
+            else:
+                messagebox.showerror("Error","Incorrect Password")
+        else:
+            messagebox.showerror("Error","Incorrect Username")
+    else:
+        messagebox.showerror("Error","Please enter all data")
+
 
 def login():
     frame1.destroy()
@@ -61,7 +78,7 @@ def login():
     password_entry2=customtkinter.CTkEntry(frame2,font=font2,show="*",text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
     password_entry2.place(x=230,y=150)
 
-    login_button2=customtkinter.CTkButton(frame2,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
+    login_button2=customtkinter.CTkButton(frame2,command=login_account,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
     login_button2.place(x=230,y=220)
 
 
