@@ -21,14 +21,14 @@ cursor.execute('''
     Create table  if not exists users (
         username TEXT NOT NULL,
         password TEXT NOT NULL)''')
-
+#Sign up Function
 def signup():
     username = username_entry.get()
     password = password_entry.get()
     if username !="" and password !="":
         cursor.execute("SELECT username FROM users WHERE username=?",[username])
         if cursor.fetchone() is not None:
-            messagebox.showerror("Error","Username already exists")
+            messagebox.showerror("Error","Username already in use")
         else:
             encoded_password = password.encode("utf-8")
             hashed_password = bcrypt.hashpw(encoded_password,bcrypt.gensalt())
@@ -38,7 +38,7 @@ def signup():
             messagebox.showinfo("Success","Your account has been created")
     else:
         messagebox.showerror("Error","Please enter all data")
-
+#Log in Function
 def login_account():
     username = username_entry2.get()
     password = password_entry2.get()
@@ -55,7 +55,7 @@ def login_account():
     else:
         messagebox.showerror("Error","Please enter all data")
 
-
+#Log in Page
 def login():
     frame1.destroy()
     frame2 = customtkinter.CTkFrame(app,bg_color="#73B12F",fg_color="#73B12F",width=470,height=360)
@@ -72,7 +72,7 @@ def login():
     global username_entry2
     global password_entry2
 
-    username_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Username",placeholder_text_color="#000000")
+    username_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text=" Username",placeholder_text_color="#000000")
     username_entry2.place(x=230,y=80)
 
     password_entry2=customtkinter.CTkEntry(frame2,font=font2,show="*",text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
@@ -81,9 +81,18 @@ def login():
     login_button2=customtkinter.CTkButton(frame2,command=login_account,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
     login_button2.place(x=230,y=220)
 
+    #Show password for login page
+    def password_command2():
+        if password_entry2.cget('show') == '*':
+            password_entry2.configure(show='')
+        else:
+            password_entry2.configure(show='*')
 
 
+    ShowButton = customtkinter.CTkButton(frame2, fg_color='#7F7F7F',font=font4, command=password_command2, text='show password',text_color="#000000",width=7)
+    ShowButton.place(x=230, y=185)
 
+#Sign up Page
 frame1 = customtkinter.CTkFrame(app,fg_color="#73B12F",bg_color="#73B12F",width=470,height=360)
 frame1.place(x=0,y=0)
 
@@ -109,7 +118,16 @@ login_label.place(x=230,y=250)
 login_button=customtkinter.CTkButton(frame1,font=font4,text="Log in",command=login,text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
 login_button.place(x=395,y=250)
 
+#show password button on signup screen
+def password_command2():
+    if password_entry.cget('show') == '*':
+        password_entry.configure(show='')
+    else:
+        password_entry.configure(show='*')
 
+
+ShowButton = customtkinter.CTkButton(frame1, fg_color='#7F7F7F',font=font4, command=password_command2, text='show password',text_color="#000000",width=7)
+ShowButton.place(x=230, y=185)
 
 
 
