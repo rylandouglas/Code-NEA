@@ -1,0 +1,42 @@
+import customtkinter
+import sqlite3
+from tkinter import *
+from tkinter import messagebox
+#Window Resolution
+app = customtkinter.CTk()
+app.title("login")
+app.geometry("1920x1080")
+app.config(bg="#257534")
+app.attributes("-fullscreen",True)
+#Text Fonts
+font1= ("Helvetica",25,"bold")
+font2= ("Arial",17,"bold")
+font3= ("Arial",13,"bold")
+font4= ("Arial",13,"bold")
+
+
+
+# Define a function to close the window
+def destroy():
+   #app.destroy()
+   app.quit()
+
+# Create a Button to call close()
+close_button=customtkinter.CTkButton(app, text= "X", font=font1, command=app.destroy,height=5,width=5)
+close_button.place(x=1800,y=2)
+
+#Sign up Page 
+#sign up page window creation
+frame1 = customtkinter.CTkFrame(app,fg_color="#73B12F",bg_color="#73B12F",width=1980,height=1080)
+frame1.place(x=0,y=0)
+#image insertion
+image1=PhotoImage(file="images.png")
+image1_label = Label(frame1,image=image1)
+image1_label.place(x=20,y=20)
+
+
+
+
+
+
+app.mainloop()
