@@ -16,25 +16,20 @@ font4= ("Arial",13,"bold")
 
 
 
-# Define a function to close the window
-def destroy():
-   #app.destroy()
-   app.quit()
-
-# Create a Button to call close()
-close_button=customtkinter.CTkButton(app, text= "X", font=font1, command=app.destroy,height=5,width=5)
-close_button.place(x=1800,y=2)
-
-#Sign up Page 
-#sign up page window creation
-frame1 = customtkinter.CTkFrame(app,fg_color="#73B12F",bg_color="#73B12F",width=1980,height=1080)
-frame1.place(x=0,y=0)
-#image insertion
-image1=PhotoImage(file="images.png")
-image1_label = Label(frame1,image=image1)
-image1_label.place(x=20,y=20)
+# Function to close the window
+def close_window():
+    app.destroy()
 
 
+
+# Create a close button
+close_button = customtkinter.CTkButton(app, text="X", command=close_window)
+close_button.pack()
+
+
+
+
+app.mainloop()
 
 
 
