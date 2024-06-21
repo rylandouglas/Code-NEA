@@ -2,18 +2,71 @@ import customtkinter
 import sqlite3
 from tkinter import *
 from tkinter import messagebox
+
 #Window Resolution
 app = customtkinter.CTk()
 app.title("login")
 app.geometry("1920x1080")
 app.config(bg="#257534")
 app.attributes("-fullscreen",True)
+
+# Change the label text 
+def show(): 
+    label.config( text = clicked.get() ) 
+
 #Text Fonts
 font1= ("Helvetica",25,"bold")
 font2= ("Arial",17,"bold")
 font3= ("Arial",13,"bold")
 font4= ("Arial",13,"bold")
+ 
+# Dropdown menu options 
+options = (
+    "Monday", 
+    "Tuesday", 
+    "Wednesday", 
+    "Thursday", 
+    "Friday", 
+    "Saturday", 
+    "Sunday"
+)
+  
+# datatype of menu text 
+clicked = StringVar() 
+  
+# initial menu text 
+clicked.set( "Monday" ) 
+ 
+ 
+#Label header
+JPLTREECARElabel=customtkinter.CTkLabel(app,font=font1,text="JPL TREE CARE",)
+JPLTREECARElabel.place(x=865,y=125)
 
+
+
+ 
+# Create Dropdown menu 
+drop = OptionMenu( app , clicked , *options ) 
+drop.pack(side="left")
+# Create Dropdown menu 2
+drop2 = OptionMenu( app , clicked , *options ) 
+drop2.pack(side="left")
+# Create Dropdown menu 3
+drop3 = OptionMenu( app , clicked , *options ) 
+drop3.pack(side="left")
+# Create Dropdown menu 4
+drop4 = OptionMenu( app , clicked , *options ) 
+drop4.pack(side="left")
+# Create Dropdown menu 5
+drop5 = OptionMenu( app , clicked , *options ) 
+drop5.pack(side="left")
+# Create button, it will change label text 
+button = Button( app , text = "click Me" ,command=show).pack() 
+  
+  
+# Create Label 
+label = Label( app , text =" " ) 
+label.pack() 
 
 
 # Function to close the window
@@ -21,15 +74,10 @@ def close_window():
     app.destroy()
 
 
+# Create a close button***** make it look fancy
+close_button = customtkinter.CTkButton(app, text="X", command=close_window,fg_color="#7F7F7F",hover_color="#880808")
+close_button.place(x=1780,y=0)
 
-# Create a close button
-close_button = customtkinter.CTkButton(app, text="X", command=close_window)
-close_button.pack()
-
-
-
-
-app.mainloop()
 
 
 
