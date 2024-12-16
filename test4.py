@@ -1,17 +1,13 @@
-import customtkinter 
-from tkinter import *
-from tkinter import messagebox
+import customtkinter as customtkinter
 
 # Initialize the customtkinter environment
-
+customtkinter.set_appearance_mode("light")  # Light mode (you can switch to "dark")
+customtkinter.set_default_color_theme("green")  # Green theme for buttons and elements
 
 # Create the main application window
 app = customtkinter.CTk()
 app.title("Booking Form")
 app.geometry("600x600")  # Adjusted window size for more content
-
-
-app.config(bg="#257534")  # Green theme for buttons and elements
 
 # Functionality for Submit Button with Validation
 def on_submit_click():
@@ -26,14 +22,14 @@ def on_submit_click():
     # Check if any entry is empty
     if not street_name or not city or not postcode or not forename or not surname or not phone_number:
         # Show error message in messagebox
-        messagebox.showerror("Input Error", "Please fill in all boxes before submitting!")
+        customtkinter.CTkMessageBox.show_error("Input Error", "Please fill in all the fields!")
     else:
         # Proceed with form submission logic
         print(f"Street: {street_name}, City: {city}, Postcode: {postcode}")
         print(f"Forename: {forename}, Surname: {surname}, Phone: {phone_number}")
 
         # Show success message in messagebox
-        messagebox.showinfo("Data Submitted", "Your information has been saved.")
+        customtkinter.CTkMessageBox.show_info("Data Submitted", "Your information has been saved.")
 
 # Create the top frame (Header with Navigation)
 header_frame = customtkinter.CTkFrame(app, height=60, corner_radius=0, fg_color="#7f7f7f")

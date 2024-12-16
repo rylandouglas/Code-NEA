@@ -1,74 +1,81 @@
-import customtkinter as ctk
-import tkinter as tk
-from tkinter import StringVar
+import customtkinter as customtkinter
+import calendar
+from tkinter import messagebox
 
-# Initialize the main application window
-app = ctk.CTk()
-app.title("Login")
-app.geometry("1920x1080")
-app.config(bg="#257534")
-app.attributes("-fullscreen", True)
+class CalendarApp:
+    def __init__(app, window):
+        app.window = window
+        app.window.title("Calendar")
+        
+        app.current_month = 1
+        app.current_year = 2024
 
-# Define text fonts
-font1 = ("Helvetica", 25, "bold")
+        # Create and pack widgets
+        app.create_widgets()
+        app.display_month(app.current_month, app.current_year)
 
-# Create and place the header label
-JPLTREECARElabel = ctk.CTkLabel(app, font=font1, text="JPL TREE CARE")
-JPLTREECARElabel.place(x=865, y=125)
+    def create_widgets(app):
+        # Main frame layout with two parts: Left for months and right for the calendar
+        main_frame = customtkinter.CTkFrame(app.window)
+        main_frame.pack(padx=10, pady=10, fill="both", expand=True)
 
-# Define items for the nested menus
-items_list = [
-    {"Category 1": ["Option 1.1", "Option 1.2", "Option 1.3"], "Category 2": ["Option 2.1", "Option 2.2"], "Category 3": ["Option 3.1", "Option 3.2", "Option 3.3", "Option 3.4"]},
-    {"Category A": ["Option A.1", "Option A.2"], "Category B": ["Option B.1", "Option B.2", "Option B.3"]},
-    {"Category X": ["Option X.1", "Option X.2", "Option X.3"], "Category Y": ["Option Y.1", "Option Y.2"], "Category Z": ["Option Z.1", "Option Z.2", "Option Z.3", "Option Z.4"]},
-    {"Group 1": ["Item 1.1", "Item 1.2"], "Group 2": ["Item 2.1", "Item 2.2", "Item 2.3"], "Group 3": ["Item 3.1", "Item 3.2"]},
-    {"Section 1": ["Element 1.1", "Element 1.2", "Element 1.3"], "Section 2": ["Element 2.1", "Element 2.2"], "Section 3": ["Element 3.1", "Element 3.2", "Element 3.3"]}
-]
+        # Left frame for month buttons
+        left_frame = customtkinter.CTkFrame(main_frame)
+        left_frame.pack(side="left", fill="y", padx=10)
 
-# Function to handle selection
-def on_select(value, selected_value):
-    selected_value.set(value)
+        # Buttons for months (Jan-Dec)
+        app.month_buttons = []
+        for i in range(1, 13):
+            month_button = customtkinter.CTkButton(left_frame, text=calendar.month_name[i], width=20,
+                                                   command=lambda month=i: app.select_month(month))
+            month_button.pack(pady=5, padx=5, fill="x")
+            app.month_buttons.append(month_button)
 
-# Create a function to generate nested dropdown menus
-def create_nested_dropdown(parent, items, default_text):
-    # Create a variable to store the selected value
-    selected_value = tk.StringVar(value=default_text)
+        # Right frame for the calendar grid
+        app.calendar_frame = customtkinter.CTkFrame(main_frame)
+        app.calendar_frame.pack(side="left", padx=10, fill="both", expand=True)
 
-    # Create the top-level menu
-    top_menu = tk.Menu(parent, tearoff=False)
+    def display_month(app, month, year):
+        """Display the calendar for the selected month."""
+        app.current_month = month
+        app.current_year = year
+        
+        # Update the calendar in the right frame
+        # Clear the previous calendar if any
+        for widget in app.calendar_frame.winfo_children():
+            widget.destroy()
 
-    # Populate the menu with items
-    for category, options in items.items():
-        category_menu = tk.Menu(top_menu, tearoff=False)
-        for option in options:
-            category_menu.add_command(label=option, command=lambda opt=option: on_select(opt, selected_value))
-        top_menu.add_cascade(label=category, menu=category_menu)
+        # Month and year label at the top
+        month_label = customtkinter.CTkLabel(app.calendar_frame, text=f"{calendar.month_name[month]} {year}", font=("Helvetica", 16))
+        month_label.grid(row=0, column=0, columnspan=7, pady=10)
 
-    # Create a button to display the menu
-    menu_button = ctk.CTkButton(parent, textvariable=selected_value, 
-                                command=lambda: top_menu.post(menu_button.winfo_rootx(), menu_button.winfo_rooty() + menu_button.winfo_height()))
-    menu_button.pack(fill=tk.X, pady=10, side=tk.LEFT, expand=True)
+        # Create the calendar for the month
+        month_days = calendar.monthcalendar(year, month)
 
-# Default texts for each dropdown
-default_texts = [
-    "Book a new job?",
-    "Existing appointments",
-    "Application process",
-    "FAQs",
-    "Reviews"
-]
+        # Create day headers (Sun, Mon, etc.)
+        day_names = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+        for col, day_name in enumerate(day_names):
+            label = customtkinter.CTkLabel(app.calendar_frame, text=day_name, font=("Helvetica", 12, "bold"))
+            label.grid(row=1, column=col, padx=5, pady=5)
 
-# Create nested dropdown menus with different options and default texts
-for items, default_text in zip(items_list, default_texts):
-    create_nested_dropdown(app, items, default_text)
+        # Add the days of the month
+        for row, week in enumerate(month_days, 2):
+            for col, day in enumerate(week):
+                if day != 0:
+                    day_button = customtkinter.CTkButton(app.calendar_frame, text=str(day), width=4, height=2,
+                                                       command=lambda d=day: app.on_day_click(d))
+                    day_button.grid(row=row, column=col, padx=5, pady=5)
 
-# Function to close the window
-def close_window():
-    app.destroy()
+    def select_month(app, month):
+        """Update the calendar to the selected month."""
+        app.display_month(month, app.current_year)
 
-# Create and place the close button
-close_button = ctk.CTkButton(app, text="X", command=close_window, fg_color="#7F7F7F", hover_color="#880808")
-close_button.place(x=1780, y=0)
+    def on_day_click(app, day):
+        """Display a message when a day is clicked."""
+        messagebox.showinfo("Day Selected", f"You selected {calendar.month_name[app.current_month]} {day}, {app.current_year}")
 
-# Start the application
-app.mainloop()
+if __name__ == "__main__":
+    # Use customtkinter to create the app window
+    app = customtkinter.CTk()
+    CalendarApp(app)
+    app.mainloop()

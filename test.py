@@ -1,82 +1,104 @@
 import customtkinter 
-import tkinter as tk
-from tkinter import StringVar
+from tkinter import *
+from tkinter import messagebox
 
-# Initialize the main application window
+# Initialize the customtkinter environment
+customtkinter.set_appearance_mode("light")  # Light mode (you can switch to "dark")
+customtkinter.set_default_color_theme("#257534")  # Green theme for buttons and elements
+
+# Create the main application window
 app = customtkinter.CTk()
-app.title("Login")
-app.geometry("1920x1080")
-app.config(bg="#257534")
-app.attributes("-fullscreen", True)
+app.title("Booking Form")
+app.geometry("600x600")  # Adjusted window size for more content
 
-# Define text fonts
-font1 = ("Helvetica", 25, "bold")
+# Functionality for Submit Button
+def on_submit_click():
+    # Collect data from form fields
+    street_name = street_name_entry.get()
+    city = city_entry.get()
+    postcode = postcode_entry.get()
+    forename = forename_entry.get()
+    surname = surname_entry.get()
+    phone_number = phone_number_entry.get()
+    
+    # Here you would normally save the data to a database or a file
+    print(f"Street: {street_name}, City: {city}, Postcode: {postcode}")
+    print(f"Forename: {forename}, Surname: {surname}, Phone: {phone_number}")
 
-# Define menu text variables
-menu_texts = [
-    "Book a new job?",
-    "Existing Appointments",
-    "Your application process",
-    "FAQs",
-    "Reviews",
-    "Stuff"
-]
-# Default texts for each dropdown
-default_texts = [
-    "Select Category 1",
-    "Select Category A",
-    "Select Category X",
-    "Select Group 1",
-    "Select Section"
-]
-# Create and place the header label
-JPLTREECARElabel = customtkinter.CTkLabel(app, font=font1, text="JPL TREE CARE")
-JPLTREECARElabel.place(x=865, y=125)
+    # Simple feedback
+    messagebox.showinfo("Data Submitted", "Your information has been saved.")
 
-# Define items for the nested menus
-items_list = [
-    {"Category 1": ["Option 1.1", "Option 1.2", "Option 1.3"], "Category 2": ["Option 2.1", "Option 2.2"], "Category 3": ["Option 3.1", "Option 3.2", "Option 3.3", "Option 3.4"]},
-    {"Category A": ["Option A.1", "Option A.2"], "Category B": ["Option B.1", "Option B.2", "Option B.3"]},
-    {"Category X": ["Option X.1", "Option X.2", "Option X.3"], "Category Y": ["Option Y.1", "Option Y.2"], "Category Z": ["Option Z.1", "Option Z.2", "Option Z.3", "Option Z.4"]},
-    {"Group 1": ["Item 1.1", "Item 1.2"], "Group 2": ["Item 2.1", "Item 2.2", "Item 2.3"], "Group 3": ["Item 3.1", "Item 3.2"]},
-    {"Section 1": ["Element 1.1", "Element 1.2", "Element 1.3"], "Section 2": ["Element 2.1", "Element 2.2"], "Section 3": ["Element 3.1", "Element 3.2", "Element 3.3"]}
-]
+# Create the top frame (Header with Navigation)
+header_frame = customtkinter.CTkFrame(app, height=60, corner_radius=0, fg_color="#7f7f7f")
+header_frame.pack(fill="x")
 
-# Function to handle selection
-def on_select(value, selected_value):
-    selected_value.set(value)
+# Navigation Buttons (Separated into two buttons)
+nav_frame = customtkinter.CTkFrame(header_frame, fg_color="#7f7f7f")  # Sub-frame for navigation buttons
+nav_frame.pack(side="left", padx=10, pady=10)
 
-# Create a function to generate nested dropdown menus
-def create_nested_dropdown(parent, items):
-    # Create a variable to store the selected value
-    selected_value = tk.StringVar(value="uh")
+# Back Button
+back_button = customtkinter.CTkButton(nav_frame, text="←", width=40)
+back_button.pack(side="left", padx=5)
 
-    # Create the top-level menu
-    top_menu = tk.Menu(parent, tearoff=False)
+# Forward Button
+forward_button = customtkinter.CTkButton(nav_frame, text="→", width=40)
+forward_button.pack(side="left", padx=5)
 
-    # Populate the menu with items
-    for category, options in items.items():
-        category_menu = tk.Menu(top_menu, tearoff=False)
-        for option in options:
-            category_menu.add_command(label=option, command=lambda opt=option: on_select(opt, selected_value))
-        top_menu.add_cascade(label=category, menu=category_menu)
+# Username Label
+username_label = customtkinter.CTkLabel(header_frame, text="(Username)", font=("Arial", 14, "bold"))
+username_label.pack(side="left", padx=20)
 
-    # Create a button to display the menu
-    menu_button = customtkinter.CTkButton(parent, textvariable=selected_value, 
-                                command=lambda: top_menu.post(menu_button.winfo_rootx(), menu_button.winfo_rooty() + menu_button.winfo_height()))
-    menu_button.pack(fill=tk.X, pady=10, side=tk.LEFT,expand=True)
+# Date and Time Label
+datetime_label = customtkinter.CTkLabel(header_frame, text="14th August 2024\n8:30 — 12", font=("Arial", 16, "bold"))
+datetime_label.pack(side="left", expand=True)
 
-# Create nested dropdown menus with different options
-label = customtkinter.CTkLabel(app, text=" ")
-label.pack()
+# Home Button
+home_button = customtkinter.CTkButton(header_frame, text="⌂", width=50)
+home_button.pack(side="right", padx=10, pady=10)
 
-# Function to close the window
-def close_window():
-    app.destroy()
+# Form Section
+form_frame = customtkinter.CTkFrame(app, fg_color="#a8d58b", corner_radius=10)
+form_frame.pack(pady=20, padx=10, fill="both", expand=True)
 
-# Create and place the close button
-close_button = customtkinter.CTkButton(app, text="X", command=close_window, fg_color="#7F7F7F", hover_color="#880808")
-close_button.place(x=1780, y=0)
+# Street Name Entry
+street_name_label = customtkinter.CTkLabel(form_frame, text="Street name")
+street_name_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
+street_name_entry = customtkinter.CTkEntry(form_frame, width=200)
+street_name_entry.grid(row=0, column=1, padx=10, pady=5)
 
-# Start the application
+# Forename Entry
+forename_label = customtkinter.CTkLabel(form_frame, text="Forename")
+forename_label.grid(row=0, column=2, padx=10, pady=5, sticky="w")
+forename_entry = customtkinter.CTkEntry(form_frame, width=200)
+forename_entry.grid(row=0, column=3, padx=10, pady=5)
+
+# City Entry
+city_label = customtkinter.CTkLabel(form_frame, text="City")
+city_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
+city_entry = customtkinter.CTkEntry(form_frame, width=200)
+city_entry.grid(row=1, column=1, padx=10, pady=5)
+
+# Surname Entry
+surname_label = customtkinter.CTkLabel(form_frame, text="Surname")
+surname_label.grid(row=1, column=2, padx=10, pady=5, sticky="w")
+surname_entry = customtkinter.CTkEntry(form_frame, width=200)
+surname_entry.grid(row=1, column=3, padx=10, pady=5)
+
+# Postcode Entry
+postcode_label = customtkinter.CTkLabel(form_frame, text="Postcode")
+postcode_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
+postcode_entry = customtkinter.CTkEntry(form_frame, width=200)
+postcode_entry.grid(row=2, column=1, padx=10, pady=5)
+
+# Phone Number Entry
+phone_number_label = customtkinter.CTkLabel(form_frame, text="Phone number")
+phone_number_label.grid(row=2, column=2, padx=10, pady=5, sticky="w")
+phone_number_entry = customtkinter.CTkEntry(form_frame, width=200)
+phone_number_entry.grid(row=2, column=3, padx=10, pady=5)
+
+# Submit Button
+submit_button = customtkinter.CTkButton(app, text="Submit", command=on_submit_click)
+submit_button.pack(pady=10)
+
+# Start the main loop
 app.mainloop()

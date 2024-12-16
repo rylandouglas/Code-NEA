@@ -1,6 +1,4 @@
 import customtkinter
-import sqlite3
-import bcrypt
 from tkinter import *
 from tkinter import messagebox
 
@@ -14,47 +12,15 @@ font2= ("Arial",17,"bold")
 font3= ("Arial",13,"bold")
 font4= ("Arial",13,"bold")
 
-conn =sqlite3.connect("data.db")
-cursor = conn.cursor()
-
-cursor.execute('''
-    Create table  if not exists users (
-        username TEXT NOT NULL,
-        password TEXT NOT NULL)''')
-#Sign up Function
-def signup():
-    username = username_entry.get()
-    password = password_entry.get()
-    if username !="" and password !="":
-        cursor.execute("SELECT username FROM users WHERE username=?",[username])
-        if cursor.fetchone() is not None:
-            messagebox.showerror("Error","Username already in use")
-        else:
-            encoded_password = password.encode("utf-8")
-            hashed_password = bcrypt.hashpw(encoded_password,bcrypt.gensalt())
-            #print(hashed_password)
-            cursor.execute("INSERT INTO users VALUES (?,?)",[username,hashed_password])
-            conn.commit()
-            messagebox.showinfo("Success","Your account has been created")
-    else:
-        messagebox.showerror("Error","Please enter all data")
 #Log in Function
 def login_account():
     username = username_entry2.get()
     password = password_entry2.get()
     if username!="" and password!="":
-        cursor.execute("Select password FROM users WHERE username=?",[username])
-        result = cursor.fetchone()
-        if result:
-            if bcrypt.checkpw(password.encode("utf-8"),result[0]):
-                messagebox.showinfo("Success","You have logged in successfully")
-            else:
-                messagebox.showerror("Error","Incorrect Password")
-        else:
-            messagebox.showerror("Error","Incorrect Username")
+        messagebox.showinfo("Success","You have logged in successfully")
     else:
         messagebox.showerror("Error","Please enter all data")
-
+    
 #Log in Page
 def login():
     #remove sign up screen and create log in screen
@@ -82,16 +48,22 @@ def login():
     login_button2=customtkinter.CTkButton(frame2,command=login_account,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
     login_button2.place(x=230,y=220)
 
-    #Show password function for login page
-    def password_command2():
-        if password_entry2.cget('show') == '*':
-            password_entry2.configure(show='')
+#Sign up Function
+def signup():
+    username = username_entry.get()
+    password = password_entry.get()
+    if username != "" and password != "":
+        if len(username) > 20 and len(password) > 20:
+            messagebox.showerror("Error", "Username and password must be less than 20 characters.")
+        elif len(username) > 20:
+            messagebox.showerror("Error", "Username must be less than 20 characters.")
+        elif len(password) > 20:
+            messagebox.showerror("Error", "Password must be less than 20 characters.")
         else:
-            password_entry2.configure(show='*')
+            messagebox.showinfo("Success", "Account created successfully!")
+    else:
+        messagebox.showerror("Error", "Please enter all data")
 
-    #Show password button creation (login screen)
-    ShowButton = customtkinter.CTkButton(frame2, fg_color='#7F7F7F',font=font4, command=password_command2, text='show password',text_color="#000000",width=7)
-    ShowButton.place(x=230, y=185)
 
 #Sign up Page
 #create sign up
@@ -113,24 +85,13 @@ password_entry.place(x=230,y=150)
 
 signup_button=customtkinter.CTkButton(frame1,command=signup,font=font2,text_color="#000000",text="Sign up",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",corner_radius=5,width=120)
 signup_button.place(x=230,y=220)
+
 #text label
 login_label=customtkinter.CTkLabel(frame1,font=font3,text="Already have an account?",fg_color="#73B12F",text_color="#000000")
 login_label.place(x=230,y=250)
 #create button that will take you to login screen
 login_button=customtkinter.CTkButton(frame1,font=font4,text="Log in",command=login,text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
 login_button.place(x=395,y=250)
-
-#show password button function on signup screen
-def password_command2():
-    if password_entry.cget('show') == '*':
-        password_entry.configure(show='')
-    else:
-        password_entry.configure(show='*')
-
-#Show password button creation (signup)
-ShowButton = customtkinter.CTkButton(frame1, fg_color='#7F7F7F',font=font4, command=password_command2, text='show password',text_color="#000000",width=7)
-ShowButton.place(x=230, y=185)
-
 
 
 
