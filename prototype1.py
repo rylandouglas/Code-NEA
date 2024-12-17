@@ -10,7 +10,7 @@ app.config(bg="#257534")
 font1= ("Helvetica",25,"bold")
 font2= ("Arial",17,"bold")
 font3= ("Arial",13,"bold")
-font4= ("Arial",13,"bold")
+font4= ("Arial",15,"bold")
 
 #Log in Function
 def login_account():
@@ -35,14 +35,14 @@ def login():
     #Text label
     login_label2= customtkinter.CTkLabel(frame2,font=font1,text="Log in",bg_color="#73B12F",text_color="#000000")
     login_label2.place(x=280,y=20)
-
+    #global variables
     global username_entry2
     global password_entry2
     #Username & Password entry text box + submit input button
     username_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text=" Username",placeholder_text_color="#000000")
     username_entry2.place(x=230,y=80)
 
-    password_entry2=customtkinter.CTkEntry(frame2,font=font2,show="*",text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
+    password_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
     password_entry2.place(x=230,y=150)
 
     login_button2=customtkinter.CTkButton(frame2,command=login_account,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
@@ -80,7 +80,7 @@ signup_label.place(x=280,y=20)
 username_entry = customtkinter.CTkEntry(frame1,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Username",placeholder_text_color="#000000")
 username_entry.place(x=230,y=80)
 
-password_entry = customtkinter.CTkEntry(frame1,font=font2,show="*",text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
+password_entry = customtkinter.CTkEntry(frame1,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
 password_entry.place(x=230,y=150)
 
 signup_button=customtkinter.CTkButton(frame1,command=signup,font=font2,text_color="#000000",text="Sign up",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",corner_radius=5,width=120)
