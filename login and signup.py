@@ -13,10 +13,10 @@ font1= ("Helvetica",25,"bold")
 font2= ("Arial",17,"bold")
 font3= ("Arial",13,"bold")
 font4= ("Arial",13,"bold")
-
+#connect to database via sqlite3
 conn =sqlite3.connect("data.db")
 cursor = conn.cursor()
-
+#create a table in database
 cursor.execute('''
     Create table  if not exists users (
         username TEXT NOT NULL,

@@ -1,104 +1,152 @@
-import customtkinter 
+import customtkinter
 from tkinter import *
 from tkinter import messagebox
+import bcrypt
+import sqlite3
 
-# Initialize the customtkinter environment
-customtkinter.set_appearance_mode("light")  # Light mode (you can switch to "dark")
-customtkinter.set_default_color_theme("#257534")  # Green theme for buttons and elements
 
-# Create the main application window
 app = customtkinter.CTk()
-app.title("Booking Form")
-app.geometry("600x600")  # Adjusted window size for more content
+app.title("login")
+app.geometry("450x360")
+app.config(bg="#257534")
 
-# Functionality for Submit Button
-def on_submit_click():
-    # Collect data from form fields
-    street_name = street_name_entry.get()
-    city = city_entry.get()
-    postcode = postcode_entry.get()
-    forename = forename_entry.get()
-    surname = surname_entry.get()
-    phone_number = phone_number_entry.get()
-    
-    # Here you would normally save the data to a database or a file
-    print(f"Street: {street_name}, City: {city}, Postcode: {postcode}")
-    print(f"Forename: {forename}, Surname: {surname}, Phone: {phone_number}")
+font1= ("Helvetica",25,"bold")
+font2= ("Arial",17,"bold")
+font3= ("Arial",13,"bold")
+font4= ("Arial",15,"bold")
 
-    # Simple feedback
-    messagebox.showinfo("Data Submitted", "Your information has been saved.")
+#connect to database via sqlite3
+conn =sqlite3.connect("data.db")
+cursor = conn.cursor()
 
-# Create the top frame (Header with Navigation)
-header_frame = customtkinter.CTkFrame(app, height=60, corner_radius=0, fg_color="#7f7f7f")
-header_frame.pack(fill="x")
+#create a table in database
+cursor.execute('''
+    Create table  if not exists users (
+        username TEXT NOT NULL,
+        password TEXT NOT NULL)''')
 
-# Navigation Buttons (Separated into two buttons)
-nav_frame = customtkinter.CTkFrame(header_frame, fg_color="#7f7f7f")  # Sub-frame for navigation buttons
-nav_frame.pack(side="left", padx=10, pady=10)
+def login_account():
+    # Get the username and password from the user input fields
+    username = username_entry2.get()
+    password = password_entry2.get()
 
-# Back Button
-back_button = customtkinter.CTkButton(nav_frame, text="←", width=40)
-back_button.pack(side="left", padx=5)
+    # Check if both username and password are provided
+    if username != "" and password != "":
+        
+        # Validate if username and password are not longer than 20 characters
+        if len(username) > 20 or len(password) > 20:
+            messagebox.showerror("Error", "Username and password must be less than 20 characters.")
+        else:
+            # Check if the username exists in the database
+            cursor.execute("SELECT password FROM users WHERE username=?", [username])
+            result = cursor.fetchone()
+            
+            if result:
+                # Check if the provided password matches the hashed password in the database
+                if bcrypt.checkpw(password.encode("utf-8"), result[0]):
+                    messagebox.showinfo("Success", "You have logged in successfully")
+                else:
+                    messagebox.showerror("Error", "Incorrect Password")
+            else:
+                messagebox.showerror("Error", "Incorrect Username")
+    else:
+        # Show an error if either the username or password is missing
+        messagebox.showerror("Error", "Please enter all data")
+   
 
-# Forward Button
-forward_button = customtkinter.CTkButton(nav_frame, text="→", width=40)
-forward_button.pack(side="left", padx=5)
+#Log in Page
+def login():
+    #remove sign up screen and create log in screen
+    frame1.destroy()
+    frame2 = customtkinter.CTkFrame(app,bg_color="#73B12F",fg_color="#73B12F",width=470,height=360)
+    frame2.place(x=0,y=0)
+    #background image
+    image1=PhotoImage(file="placeholder.png")
+    image1_label=Label(frame2,image=image1,bg="#73B12F")
+    image1_label.place(x=20,y=20)
+    frame2.image1= image1
+    #Text label
+    login_label2= customtkinter.CTkLabel(frame2,font=font1,text="Log in",bg_color="#73B12F",text_color="#000000")
+    login_label2.place(x=280,y=20)
+    #global variables
+    global username_entry2
+    global password_entry2
+    #Username & Password entry text box + submit input button
+    username_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text=" Username",placeholder_text_color="#000000")
+    username_entry2.place(x=230,y=80)
 
-# Username Label
-username_label = customtkinter.CTkLabel(header_frame, text="(Username)", font=("Arial", 14, "bold"))
-username_label.pack(side="left", padx=20)
+    password_entry2=customtkinter.CTkEntry(frame2,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
+    password_entry2.place(x=230,y=150)
 
-# Date and Time Label
-datetime_label = customtkinter.CTkLabel(header_frame, text="14th August 2024\n8:30 — 12", font=("Arial", 16, "bold"))
-datetime_label.pack(side="left", expand=True)
+    login_button2=customtkinter.CTkButton(frame2,command=login_account,font=font4,text="Log in",text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
+    login_button2.place(x=230,y=220)
 
-# Home Button
-home_button = customtkinter.CTkButton(header_frame, text="⌂", width=50)
-home_button.pack(side="right", padx=10, pady=10)
+#signup function
+def signup():
+    # Get the username and password entered by the user
+    username = username_entry.get()
+    password = password_entry.get()
 
-# Form Section
-form_frame = customtkinter.CTkFrame(app, fg_color="#a8d58b", corner_radius=10)
-form_frame.pack(pady=20, padx=10, fill="both", expand=True)
+    # Check if both username and password are provided
+    if username != "" and password != "":
+        
+        # Check if the username or password exceed 20 characters
+        if len(username) > 20 or len(password) > 20:
+            messagebox.showerror("Error", "Username and password must be less than 20 characters.")
+        
+        else:
+            # Check if the username already exists in the database
+            cursor.execute("SELECT username FROM users WHERE username=?", [username])
+            if cursor.fetchone() is not None:
+                messagebox.showerror("Error", "Username already in use")
+            else:
+                # Encode and hash the password with bcrypt
+                encoded_password = password.encode("utf-8")
+                hashed_password = bcrypt.hashpw(encoded_password, bcrypt.gensalt())
+                
+                # Insert the new user into the database
+                cursor.execute("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashed_password])
+                conn.commit()  # Commit the changes to the database
+                
+                # Show success message
+                messagebox.showinfo("Success", "Your account has been created")
+    else:
+        # Show error if username or password is empty
+        messagebox.showerror("Error", "Please enter all data")
 
-# Street Name Entry
-street_name_label = customtkinter.CTkLabel(form_frame, text="Street name")
-street_name_label.grid(row=0, column=0, padx=10, pady=5, sticky="w")
-street_name_entry = customtkinter.CTkEntry(form_frame, width=200)
-street_name_entry.grid(row=0, column=1, padx=10, pady=5)
+     
 
-# Forename Entry
-forename_label = customtkinter.CTkLabel(form_frame, text="Forename")
-forename_label.grid(row=0, column=2, padx=10, pady=5, sticky="w")
-forename_entry = customtkinter.CTkEntry(form_frame, width=200)
-forename_entry.grid(row=0, column=3, padx=10, pady=5)
 
-# City Entry
-city_label = customtkinter.CTkLabel(form_frame, text="City")
-city_label.grid(row=1, column=0, padx=10, pady=5, sticky="w")
-city_entry = customtkinter.CTkEntry(form_frame, width=200)
-city_entry.grid(row=1, column=1, padx=10, pady=5)
+#Sign up Page
+#create sign up
+frame1 = customtkinter.CTkFrame(app,fg_color="#73B12F",bg_color="#73B12F",width=470,height=360)
+frame1.place(x=0,y=0)
+#insert background image
+image1=PhotoImage(file="placeholder.png")
+image1_label = Label(frame1,image=image1)
+image1_label.place(x=20,y=20)
+#text label
+signup_label =customtkinter.CTkLabel(frame1,font=font1,text="Sign up",text_color="#000000")
+signup_label.place(x=280,y=20)
+#Username & Password entry text box + submit input button
+username_entry = customtkinter.CTkEntry(frame1,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Username",placeholder_text_color="#000000")
+username_entry.place(x=230,y=80)
 
-# Surname Entry
-surname_label = customtkinter.CTkLabel(form_frame, text="Surname")
-surname_label.grid(row=1, column=2, padx=10, pady=5, sticky="w")
-surname_entry = customtkinter.CTkEntry(form_frame, width=200)
-surname_entry.grid(row=1, column=3, padx=10, pady=5)
+password_entry = customtkinter.CTkEntry(frame1,font=font2,text_color="#000000",fg_color="#7F7F7F",border_color="#004790",border_width=3,placeholder_text="Password",placeholder_text_color="#000000")
+password_entry.place(x=230,y=150)
 
-# Postcode Entry
-postcode_label = customtkinter.CTkLabel(form_frame, text="Postcode")
-postcode_label.grid(row=2, column=0, padx=10, pady=5, sticky="w")
-postcode_entry = customtkinter.CTkEntry(form_frame, width=200)
-postcode_entry.grid(row=2, column=1, padx=10, pady=5)
+signup_button=customtkinter.CTkButton(frame1,command=signup,font=font2,text_color="#000000",text="Sign up",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",corner_radius=5,width=120)
+signup_button.place(x=230,y=220)
 
-# Phone Number Entry
-phone_number_label = customtkinter.CTkLabel(form_frame, text="Phone number")
-phone_number_label.grid(row=2, column=2, padx=10, pady=5, sticky="w")
-phone_number_entry = customtkinter.CTkEntry(form_frame, width=200)
-phone_number_entry.grid(row=2, column=3, padx=10, pady=5)
+#text label
+login_label=customtkinter.CTkLabel(frame1,font=font3,text="Already have an account?",fg_color="#73B12F",text_color="#000000")
+login_label.place(x=230,y=250)
+#create button that will take you to login screen
+login_button=customtkinter.CTkButton(frame1,font=font4,text="Log in",command=login,text_color="#000000",fg_color="#7F7F7F",hover_color="#006e44",cursor="hand2",width=40)
+login_button.place(x=395,y=250)
 
-# Submit Button
-submit_button = customtkinter.CTkButton(app, text="Submit", command=on_submit_click)
-submit_button.pack(pady=10)
 
-# Start the main loop
+
+
 app.mainloop()
+
