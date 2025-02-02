@@ -27,21 +27,21 @@ class CalendarApp:
 
     def create_widgets(app):
         # Frame for menu bar at the top (this will hold the buttons and placeholder text)
-        menu_bar_frame = customtkinter.CTkFrame(app.window, fg_color="#257534")  # Set frame color to green
+        menu_bar_frame = customtkinter.CTkFrame(app.window, fg_color="#2F2F2F")  # Set frame color to green
         menu_bar_frame.pack(side="top", fill="x", padx=10, pady=10)
 
         # Buttons for the menu bar (set background to dark grey)
-        menu_button_1 = customtkinter.CTkButton(menu_bar_frame, text="Action 1", command=lambda: app.on_menu_button_click(1), fg_color="darkgrey")
+        menu_button_1 = customtkinter.CTkButton(menu_bar_frame, text="Action 1", command=lambda: app.on_menu_button_click(1), fg_color="#2F2F2F")
         menu_button_1.pack(side="left", padx=5)
         
-        menu_button_2 = customtkinter.CTkButton(menu_bar_frame, text="Action 2", command=lambda: app.on_menu_button_click(2), fg_color="darkgrey")
+        menu_button_2 = customtkinter.CTkButton(menu_bar_frame, text="Action 2", command=lambda: app.on_menu_button_click(2), fg_color="#2F2F2F")
         menu_button_2.pack(side="left", padx=5)
 
-        menu_button_3 = customtkinter.CTkButton(menu_bar_frame, text="Action 3", command=lambda: app.on_menu_button_click(3), fg_color="darkgrey")
+        menu_button_3 = customtkinter.CTkButton(menu_bar_frame, text="Action 3", command=lambda: app.on_menu_button_click(3), fg_color="#2F2F2F")
         menu_button_3.pack(side="left", padx=5)
 
         # Close Window Button (positioned on the right side of the menu bar)
-        close_button = customtkinter.CTkButton(menu_bar_frame, text="Close Window", command=app.close_window, fg_color="darkgrey")
+        close_button = customtkinter.CTkButton(menu_bar_frame, text="Close Window", command=app.close_window, fg_color="#2F2F2F")
         close_button.pack(side="right", padx=5)
 
         # Placeholder label in the same menu bar frame (set text color to white for contrast)
@@ -60,7 +60,7 @@ class CalendarApp:
         app.month_buttons = []
         for i in range(1, 13):
             month_button = customtkinter.CTkButton(left_frame, text=calendar.month_name[i], width=20,
-                                                   command=lambda month=i: app.select_month(month), fg_color="darkgrey")
+                                                   command=lambda month=i: app.select_month(month), fg_color="#2F2F2F")
             month_button.pack(pady=5, padx=5, fill="x")
             app.month_buttons.append(month_button)
 
